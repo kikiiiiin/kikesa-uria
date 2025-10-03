@@ -1,0 +1,133 @@
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ShoppingCart } from "lucide-react";
+import { motion } from "framer-motion";
+
+const productos = [
+  {
+    id: 1,
+    nombre: "T-Rex Gigante",
+    precio: 1200,
+    imagen: "https://upload.wikimedia.org/wikipedia/commons/6/6f/Tyrannosaurus_rex_museum_of_the_rockies.jpg",
+  },
+  {
+    id: 2,
+    nombre: "Triceratops Deluxe",
+    precio: 950,
+    imagen: "https://upload.wikimedia.org/wikipedia/commons/e/e2/Triceratops_BW.jpg",
+  },
+  {
+    id: 3,
+    nombre: "Velociraptor Articulado",
+    precio: 750,
+    imagen: "https://upload.wikimedia.org/wikipedia/commons/7/73/Velociraptor_side.jpg",
+  },
+  {
+    id: 4,
+    nombre: "Brachiosaurio XXL",
+    precio: 1500,
+    imagen: "https://upload.wikimedia.org/wikipedia/commons/5/52/Brachiosaurus_SDNM.png",
+  },
+];
+
+export default function TiendaKikesauria() {
+  const [carrito, setCarrito] = useState([]);
+
+  const agregarAlCarrito = (producto) => {
+    setCarrito([...carrito, producto]);
+    const audio = new Audio(
+      "https://www.fesliyanstudios.com/play-mp3/387" // Rugido T-Rex gratis
+    );
+    audio.play();
+  };
+
+  const total = carrito.reduce((acc, item) => acc + item.precio, 0);
+
+  return (
+    <div
+      className="min-h-screen bg-cover bg-center text-white p-6"
+      style={{
+        backgroundImage:
+          "url('https://images.unsplash.com/photo-1601758125946-6ec2f4c1e30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80')",
+      }}
+    >
+      <header className="text-center mb-10 bg-black/50 p-6 rounded-2xl">
+        <motion.h1
+          initial={{ y: -100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="text-6xl font-extrabold tracking-widest drop-shadow-lg text-green-400"
+        >
+          🦖 Tienda Kikesauria
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 1 }}
+          className="text-lg mt-2 text-green-200"
+        >
+          Bienvenido a la era jurásica - Figuras prehistóricas para coleccionistas
+        </motion.p>
+      </header>
+
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {productos.map((producto) => (
+          <motion.div
+            key={producto.id}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Card className="bg-green-900/70 border-green-600 rounded-2xl shadow-2xl hover:scale-105 transition-transform">
+              <CardContent className="p-4 text-center">
+                <motion.img
+                  src={producto.imagen}
+                  alt={producto.nombre}
+                  whileHover={{ scale: 1.1, rotate: 2 }}
+                  className="w-full h-60 object-cover rounded-xl border-2 border-green-700"
+                />
+                <h3 className="text-2xl font-bold mt-4 text-green-200">
+                  {producto.nombre}
+                </h3>
+                <p className="text-lg mt-2 mb-4">${producto.precio} MXN</p>
+                <Button
+                  onClick={() => agregarAlCarrito(producto)}
+                  className="bg-green-600 hover:bg-green-700 w-full rounded-xl text-lg"
+                >
+                  <ShoppingCart className="inline mr-2" size={18} /> Añadir al carrito
+                </Button>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
+
+      <footer className="mt-12 text-center bg-black/50 p-6 rounded-2xl">
+        <h2 className="text-3xl font-bold mb-2 text-green-300">🛒 Carrito</h2>
+        {carrito.length === 0 ? (
+          <p className="text-green-400">Aún no has añadido nada</p>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="bg-green-900/70 p-4 rounded-xl max-w-lg mx-auto"
+          >
+            <ul className="text-left">
+              {carrito.map((item, index) => (
+                <li key={index} className="border-b border-green-700 py-2">
+                  {item.nombre} - ${item.precio} MXN
+                </li>
+              ))}
+            </ul>
+            <p className="mt-4 text-xl font-semibold text-green-200">
+              Total: ${total} MXN
+            </p>
+          </motion.div>
+        )}
+        <p className="mt-6 text-green-500 text-sm">© 2025 Tienda Kikesauria - Proyecto escolar</p>
+      </footer>
+    </div>
+  );
+}
